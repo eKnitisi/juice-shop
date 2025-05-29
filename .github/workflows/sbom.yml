@@ -9,7 +9,6 @@ on:
 jobs:
   generate-sbom:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -22,11 +21,15 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Install CycloneDX generator
+        run: npm install -g @cyclonedx/bom
+
       - name: Generate SBOM
-        run: npx @cyclonedx/bom -o sbom.json
+        run: $(npm bin -g)/cyclonedx-bom -o sbom.json
 
       - name: Upload SBOM as artifact
         uses: actions/upload-artifact@v4
         with:
           name: juice-shop-sbom
           path: sbom.json
+
